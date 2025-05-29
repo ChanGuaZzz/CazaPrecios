@@ -1,12 +1,20 @@
 import { useState } from "react";
 import { FaSearch, FaShoppingCart, FaChartLine, FaTag } from "react-icons/fa";
 import "animate.css";
+import { useNavigate } from "react-router-dom"; 
 
 function LandingPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const navigation = useNavigate();
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!searchQuery.trim()) {
+      return; // Prevent search if the input is empty
+    }
+    // Navigate to the comparator page with the search query
+    navigation(`/comparator/${encodeURIComponent(searchQuery)}`);
+    
     // Implement search functionality here
   };
 

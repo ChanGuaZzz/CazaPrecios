@@ -14,6 +14,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/comparator" element={<Comparator />} />
+          <Route path="/comparator/:productString" element={<Comparator />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>

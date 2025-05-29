@@ -1,5 +1,5 @@
 import { MdMenu, MdMenuOpen } from "react-icons/md";
-import { useState, useEffect, use} from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaX } from "react-icons/fa6";
 import { BsArrowRight } from "react-icons/bs";
@@ -12,7 +12,8 @@ interface Menu {
 
 interface Route {
   name: string;
-  path: string;
+  path?: string;
+  function?: boolean;
 }
 
 function Menu({ isMenuOpen, toggleMenu }: Menu) {
@@ -22,7 +23,7 @@ function Menu({ isMenuOpen, toggleMenu }: Menu) {
 
   const routes = useState<Route[]>([
     { name: "Home", path: "/" },
-    { name: "Saves", path: "/saves " },
+    { name: "Saves", function: true },
     { name: "Profile", path: "/profile" },
   ]);
 
@@ -44,33 +45,30 @@ function Menu({ isMenuOpen, toggleMenu }: Menu) {
   }, [location.pathname]);
   //
 
+  // Alternative approach using useEffect (place this inside your component)
+  useEffect(() => {
+    const mainElement = document.getElementsByTagName("main")[0];
 
- // Alternative approach using useEffect (place this inside your component)
-useEffect(() => {
-  const mainElement = document.getElementsByTagName("main")[0];
-  
-  if (isMenuOpen) {
-    document.body.style.overflow = "hidden";
-    if (mainElement) {
-      mainElement.style.filter = "blur(5px)";
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+      if (mainElement) {
+        mainElement.style.filter = "blur(5px)";
+      }
+    } else {
+      document.body.style.overflow = "auto";
+      if (mainElement) {
+        mainElement.style.filter = "none";
+      }
     }
-  } else {
-    document.body.style.overflow = "auto";
-    if (mainElement) {
-      mainElement.style.filter = "none";
-    }
-  }
-  
-  return () => {
-    // Cleanup when component unmounts
-    document.body.style.overflow = "auto";
-    if (mainElement) {
-      mainElement.style.filter = "none";
-    }
-  };
-}, [isMenuOpen]);
 
-  
+    return () => {
+      // Cleanup when component unmounts
+      document.body.style.overflow = "auto";
+      if (mainElement) {
+        mainElement.style.filter = "none";
+      }
+    };
+  }, [isMenuOpen]);
 
   return (
     <>
@@ -91,22 +89,65 @@ useEffect(() => {
           </div>
           <ul className="flex flex-col w-full">
             {routes[0].map((route) => (
-              <Link key={route.name} className={`text-gray-300   py-3 w-full flex justify-between hover:text-[#c07cf8] cursor-pointer mb-2`} to={route.path}>
-                <span className={`ml-5 px-1 relative  ${isActive(route.path)&& 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:rounded-full after:h-0.5 after:bg-[#ad46ff]'} `}>{route.name}</span>
-                <BsArrowRight className="text-xl text-gray-300 cursor-pointer" />
-              </Link>
+              <>
+                {route.function ? (
+                  <>
+                    <button
+                    onClick={() => {}}
+                      key={route.name}
+                      className={`text-gray-300 py-3 w-full flex justify-between hover:text-[#c07cf8] cursor-pointer mb-2`}
+                    >
+                      <span className={`ml-5 px-1 relative `}>{route.name}</span>
+                      <BsArrowRight className="text-xl text-gray-300 cursor-pointer" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {route.path && (
+                      <Link
+                        key={route.name}
+                        className={`text-gray-300 py-3 w-full flex justify-between hover:text-[#c07cf8] cursor-pointer mb-2`}
+                        to={route.path}
+                      >
+                        <span
+                          className={`ml-5 px-1 relative  ${
+                            isActive(route.path) &&
+                            'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:rounded-full after:h-0.5 after:bg-[#ad46ff]'
+                          } `}
+                        >
+                          {route.name}
+                        </span>
+                        <BsArrowRight className="text-xl text-gray-300 cursor-pointer" />
+                      </Link>
+                    )}
+                  </>
+                )}
+              </>
             ))}
           </ul>
         </div>
         {/* Overlay para detectar clics fuera del menú */}
-        
       </div>
       <div className="hidden md:flex items-center pr-4">
         <ul className="flex space-x-4 text-gray-300">
           {routes[0].map((route) => (
-            <Link key={route.name} className="text-gray-300 hover:text-[#c07cf8] cursor-pointer mb-2" to={route.path}>
-              {route.name}
-            </Link>
+            <>
+              {route.function ? (
+                <>
+                  <button onClick={() => {}} key={route.name} className="text-gray-300 hover:text-[#c07cf8] cursor-pointer mb-2">
+                    {route.name}
+                  </button>
+                </>
+              ) : (
+                <>
+                  {route.path && (
+                    <Link key={route.name} className="text-gray-300 hover:text-[#c07cf8] cursor-pointer mb-2" to={route.path}>
+                      {route.name}
+                    </Link>
+                  )}
+                </>
+              )}
+            </>
           ))}
         </ul>
       </div>
