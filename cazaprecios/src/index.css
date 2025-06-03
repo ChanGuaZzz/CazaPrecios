@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+.scrollbar_dark{
+    scrollbar-color: #4b5563 #1f2937; /* Dark mode scrollbar thumb and track */
+    scrollbar-width: thin; /* Thin scrollbar */
+}

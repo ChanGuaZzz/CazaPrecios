@@ -4,10 +4,12 @@ import Login from "./pages/login.tsx";
 import Comparator from "./pages/comparator.tsx";
 import Profile from "./pages/profile.tsx";
 import Header from "./components/Header.tsx";
+import { AppProvider } from "./contexts/AppContext.tsx";
 
 function App() {
   return (
     <>
+    <AppProvider>
       <Router basename="/" >
         <Header />
         <Routes>
@@ -18,6 +20,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
+    </AppProvider>
     </>
   );
 }
